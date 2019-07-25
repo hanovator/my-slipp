@@ -1,7 +1,7 @@
 # spring_boot
 spring-boot &amp; jpa practice
 
-# 서버환경 : aws ec2 ubuntu 
-# orm : jpa
-# framework : spring boot
-# templete engine : mustache
+### 서버환경 : aws ec2 ubuntu 
+### orm : jpa
+### framework : spring boot
+### templete engine : mustache
