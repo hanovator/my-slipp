@@ -5,3 +5,5 @@ spring-boot &amp; jpa practice
 ### orm : jpa
 ### framework : spring boot
 ### templete engine : mustache
+### database : h2
+### logging: log4j
