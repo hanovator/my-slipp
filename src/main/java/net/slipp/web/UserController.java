@@ -23,6 +23,24 @@ public class UserController {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@GetMapping("/loginForm")
+	public String loginForm(){
+		
+		return "/user/login";
+	}
+	
+	@PostMapping("/login")
+	public String login(UserVo uvo){
+		UserVo user = userRepository.findByUserId(uvo.getUserId());
+		if(user == null || !uvo.getPassword().equals(user.getPassword())){
+			return "redirect:/users/loginForm";
+		}
+		
+		
+		
+		return "redirect:/";
+	}
+	
 	@GetMapping("/form")
 	public String form(){
 		return "/user/form";
