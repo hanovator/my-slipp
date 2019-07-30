@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,14 +32,20 @@ public class UserController {
 	}
 	
 	@PostMapping("/login")
-	public String login(UserVo uvo){
+	public String login(UserVo uvo, HttpSession session){
 		UserVo user = userRepository.findByUserId(uvo.getUserId());
-		if(user == null || !uvo.getPassword().equals(user.getPassword())){
+		if(user == null || !user.matchPw(uvo.getPassword())){
 			return "redirect:/users/loginForm";
 		}
 		
+		session.setAttribute(HttpSessionUtils.USER_SESSION_KEY, user);
 		
-		
+		return "redirect:/";
+	}
+	
+	@GetMapping("/logout")
+	public String logout(HttpSession session){
+		session.removeAttribute(HttpSessionUtils.USER_SESSION_KEY);
 		return "redirect:/";
 	}
 	
@@ -59,14 +67,32 @@ public class UserController {
 	}
 	
 	@GetMapping("/{id}/form")
-	public String updateForm(@PathVariable Long id, Model model){
+	public String updateForm(@PathVariable Long id, Model model, HttpSession session){
+		if(!HttpSessionUtils.isLoginUser(session)){
+			return "redirect:/users/loginForm";
+		}
+		
+		UserVo sessionUser = HttpSessionUtils.getUserFromSession(session);
+		if(!sessionUser.matchId(id)){
+			return "redirect:/users/loginForm";
+		}
+		
 		UserVo user = userRepository.findOne(id);
 		model.addAttribute("user", user);
 		return "/user/updateForm";
 	}
 	
 	@PutMapping("/{id}")
-	public String update(@PathVariable Long id, UserVo updateUser){
+	public String update(@PathVariable Long id, UserVo updateUser, HttpSession session){
+		if(!HttpSessionUtils.isLoginUser(session)){
+			return "redirect:/users/loginForm";
+		}
+		
+		UserVo sessionUser = HttpSessionUtils.getUserFromSession(session);
+		if(!sessionUser.matchId(id)){
+			return "redirect:/users/loginForm";
+		}
+		
 		UserVo user = userRepository.findOne(id);
 		user.update(updateUser);
 		userRepository.save(user);

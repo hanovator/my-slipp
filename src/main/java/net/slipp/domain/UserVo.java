@@ -13,13 +13,29 @@ public class UserVo {
 	@GeneratedValue // seq처럼 1씩 자동증가
 	private Long id;
 	
-	@Column(nullable=false, length=20) // null값이 들어갈 수 없다. default : true  f3로 속성을 볼 수 있다.
+	@Column(nullable=false, length=20, unique=true) // null값이 들어갈 수 없다. default : true  f3로 속성을 볼 수 있다.
 	private String userId;
 	
 	private String name;
 	private String password;
 	private String email;
 	
+	
+	public boolean matchId(Long newId) {
+		if(newId == null){
+			return false;
+		}
+		
+		return newId.equals(id);
+	}
+	
+	public boolean matchPw(String newPw) {
+		if(newPw == null){
+			return false;
+		}
+		
+		return newPw.equals(password);
+	}
 	
 	public Long getId() {
 		return id;
