@@ -2,13 +2,17 @@ package net.slipp.domain;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 
 @Entity
 public class Question{
@@ -22,8 +26,14 @@ public class Question{
 	private UserVo writer;
 
 	private String title;
+	
+	@Lob // VARCHAR(255)보다 훨씬 더 많은 값을 저장 할 수 있다.
 	private String contents;
 	private LocalDateTime createDate;
+	
+	@OneToMany(mappedBy="question")
+	@OrderBy("id ASC")
+	private List<Answer> answers;
 	
 	public Question(){}
 	
@@ -46,4 +56,9 @@ public class Question{
 		this.title = title;
 		this.contents = contents;
 	}
+
+	public boolean isSameWriter(UserVo loginUser) {
+		return this.writer.equals(loginUser);
+	}
+	
 }
