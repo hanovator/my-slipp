@@ -32,9 +32,9 @@ public class UserController {
 	}
 	
 	@PostMapping("/login")
-	public String login(UserVo uvo, HttpSession session){
-		UserVo user = userRepository.findByUserId(uvo.getUserId());
-		if(user == null || !user.matchPw(uvo.getPassword())){
+	public String login(String userId, String password, HttpSession session){
+		UserVo user = userRepository.findByUserId(userId);
+		if(user == null || !user.matchPassword(password)){
 			return "redirect:/users/loginForm";
 		}
 		
